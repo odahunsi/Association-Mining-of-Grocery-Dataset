@@ -1,0 +1,2 @@
+# Association-Mining-of-Grocery-Dataset
+Association Rule Mining is a data mining technique that extracts knowledge from relational databases. This study explored association rule mining using market basket analysis to discover relationships among grocery items. Most frequently purchased items were identified among the grocery items and a model was built using apriori algorithm to create a set of rules that determine their relationships. Constraints such as support, confidence and lift contribute to the effectiveness of the algorithm.
