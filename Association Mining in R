@@ -1,0 +1,53 @@
+library(dplyr)
+library(tidyr)
+library(arules)
+library(arulesViz)
+library(datasets)
+G_trans <- read.transactions("Groceries_dataset.csv", header = TRUE,
+                                     format = "single", sep = ",", cols = 1:2)
+G_trans
+inspect(tail(G_trans, 5))
+head(G_trans,10)
+summary(G_trans)
+inspect(G_trans)
+
+
+itemFrequencyPlot(G_trans, topN=10, type="absolute", col = rainbow(10))
+itemFrequencyPlot(G_trans, topN=20, type="relative", horiz=TRUE)
+itemFrequency(G_trans)
+itemFrequency(G_trans)[121]
+itemFrequency(G_trans)["sausage"]
+itemFrequency(G_trans)["whole milk"]
+
+grep("vegetables",itemLabels(G_trans))
+
+
+#To show frequency of the items, we create the grep command as a vector
+itemFrequency(G_trans)[grep("vegetables",itemLabels(G_trans))]
+
+#................Setting the apriori rules................
+
+my_apriori_rules <- apriori(G_trans, parameter = list(supp=0.001, conf=0.7, minlen=2, maxlen=3), control=list(verbose=FALSE))
+length(my_apriori_rules)
+inspect(my_apriori_rules[1:5])
+summary(my_apriori_rules)
+
+#sorting the rules by quality measure.........................
+inspect(sort(my_apriori_rules, by = "lift", decreasing = TRUE)[1:10])
+inspect(sort(my_apriori_rules, by = "confidence", decreasing = TRUE)[1:4])
+inspect(sort(my_apriori_rules, by = "support", decreasing = TRUE)[1:4])
+
+sort_by_lift <- sort(my_apriori_rules, by="lift")[1:10]
+length(sort_by_lift)
+plot(sort_by_lift, method = "graph")
+
+install.packages("shiny")
+install.packages("shinythemes")
+library(shiny)
+library(shinythemes)
+ruleExplorer(my_apriori_rules)
+
+rules2 <- apriori(G_trans, parameter = list(supp=0.001, conf=0.7, maxlen=3), control=list(verbose=FALSE))
+rules2<- sort(rules2, by="lift")[c(1:13,22:23,98)]
+length(rules2)
+plot(rules2, method = "graph")
